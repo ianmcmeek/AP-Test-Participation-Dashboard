@@ -183,7 +183,7 @@ dash_app.layout = html.Div(children=[
 ], style={'fontFamily': 'Arial', 'margin': 25})
 
 # Update the bar chart
-@app.callback(
+@dash_app.callback(
     Output('bar-chart', 'figure'),
     Input('state-dropdown', 'value')
 )
@@ -216,7 +216,7 @@ def get_bar(selected_state):
     return fig
 
 # Update the choropleth
-@app.callback(
+@dash_app.callback(
     Output('choropleth', 'figure'),
     Input('race-radio', 'value')
 )
