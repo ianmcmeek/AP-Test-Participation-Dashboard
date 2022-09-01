@@ -11,7 +11,7 @@ Part 1 - Import and process data into dataframes for:
 '''
 # List race groups and build the names of columns for the spreadsheet data
 groups = ['Native American', 'Asian', 'Hispanic', 'Black', 'White', 'Pacific Islander', 'Multiracial']
-names=[]
+names=['Total']
 for group in groups:
     names.append(group + ' Number')
     names.append(group + ' Percent')
@@ -23,7 +23,7 @@ enrollment = pd.read_excel(
     header=None,
     names=['State'] + names,
     index_col=0,
-    usecols='B,E:R',
+    usecols='B:C,E:R',
     skiprows=6,
     nrows=52
 )
@@ -35,7 +35,7 @@ ap = pd.read_excel(
     header=None,
     names=['State'] + [(name + ' AP') for name in names],
     index_col=0,
-    usecols='B,D:Q',
+    usecols='B:Q',
     skiprows=6,
     nrows=52
 )
@@ -54,6 +54,9 @@ for group in groups:
 
 # Move state names from index to a column to facilitate building the choropleth
 df_ratios.reset_index(inplace=True)
+
+# Export the data for additional analyses outside the app
+df_ratios.to_csv('Supplemental/participation_ratios.csv')
 
 
 # Create dataframe for bar charts
@@ -75,7 +78,6 @@ df_bar.columns = [column.replace(' Number', '') for column in list(df_bar.column
 #Transpose dataframe to facilitate building the bar chart
 df_bar = df_bar.transpose().reset_index()
 df_bar.rename(columns={'index': 'Race'}, inplace=True)
-
 
 
 '''
@@ -188,11 +190,14 @@ dash_app.layout = html.Div(children=[
     Input('state-dropdown', 'value')
 )
 def get_bar(selected_state):  
+    # Don't include the 'Total' row of the chart in the bar graph
+    df_bar_no_total = df_bar[df_bar['Race']!='Total']
+    
     fig = go.Figure()
     # Add bars showing each race's share of total state enrollment
     fig.add_trace(go.Bar(
-        y=df_bar['Race'],
-        x=100 * df_bar[selected_state] / df_bar[selected_state].sum(),
+        y=df_bar_no_total['Race'],
+        x=100 * df_bar_no_total[selected_state] / df_bar.loc[0, selected_state],
         orientation='h',
         name='Total Enrollment',
         hovertemplate='Total Enrollment: %{text:,}<extra></extra>',
@@ -201,8 +206,8 @@ def get_bar(selected_state):
     ))
     # Add bars showing each race's share of AP test takers
     fig.add_trace(go.Bar(
-        y=df_bar['Race'],
-        x=100 * df_bar[(selected_state + ' AP')] / df_bar[(selected_state + ' AP')].sum(),
+        y=df_bar_no_total['Race'],
+        x=100 * df_bar_no_total[(selected_state + ' AP')] / df_bar.loc[0, (selected_state + ' AP')],
         orientation='h',
         name='AP Test Participation',
         hovertemplate='AP Test Participation: %{text:,}<extra></extra>',
