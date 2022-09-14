@@ -87,7 +87,7 @@ To illustrate Question 3, consider Native American students in West Virginia. Th
 
 Reviewing the source data, Native American students account for 291 of the students in the state and 9 AP test takers. Nine test takers! That hardly seems statistically significant. Indeed, a chi-square test returns a p-value of 0.43, so the difference is not remotely statistically significant.
 
-A battery of similar chi-square tests was run for all states that appeared on the choropleth as overrepresenting Native American, Pacific Islander, and/or Multiracial students ([view Jupyter Notebook here]()). Of 19 tests that were run, only one returned a statistically significant result, and two returned marginally significant results.
+A battery of similar chi-square tests was run for all states that appeared on the choropleth as overrepresenting Native American, Pacific Islander, and/or Multiracial students ([view Jupyter Notebook here](https://github.com/ianmcmeek/AP-Test-Participation-Dashboard/blob/main/Supplemental/Significance_Tests.ipynb)). Of 19 tests that were run, only one returned a statistically significant result, and two returned marginally significant results.
 
 |State               |Race            |Participation Ratio|p-value                       |
 |:------------------:|:--------------:|:-----------------:|:----------------------------:|
